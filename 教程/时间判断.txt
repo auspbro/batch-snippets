@@ -1,0 +1,15 @@
+@echo off
+:start
+set t=%time:~0,8%
+set t=%t::=%
+set t=%t:~0,-2%
+if %t% leq 2330 if %t% geq 830 goto :jw
+
+exit
+
+:jw
+echo.      现在时间%time%！
+echo.        
+echo.          t=%t%
+pause
+exit

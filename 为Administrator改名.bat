@@ -1,0 +1,1 @@
+Wmic ComputerSystem Where "Name='Administrator'" Call ReName "Wingl83"

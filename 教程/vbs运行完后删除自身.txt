@@ -1,0 +1,1 @@
+createobject("scripting.filesystemobject").getfile(wscript.scriptfullname).delete

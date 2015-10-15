@@ -1,0 +1,4 @@
+net user Wing /times:M-F,7:00-18:00 /PASSWORDCHG:NO——限制
+
+net user Wing /times:all
+net user Wing 123——取消

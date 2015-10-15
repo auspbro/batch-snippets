@@ -1,0 +1,174 @@
+看到有人用这个工具开关硬件,小巧也方便,微软出的很官方,哈哈
+以后可以在au3里面使用一下,当然能调用命令行的都可以使用:
+据个例子: devcon disable "PCI\VEN_10EC&DEV_8136*" 这个是关闭我机器上的lan;
+
+
+devcon.exe [-r] [-m:\\<machine>] <command> [<arg>]
+-r if specified will reboot machine after command is complete, if needed.
+<machine> 目标机器名字.
+<command> 命令(见下面).
+<arg>传给命令的参数.
+For help on a specific command, type: devcon.exe help <command>
+classfilter              允许修改class filters.
+classes                  显示设备安装classes.
+disable                  用指定的硬件名称或者instance ID禁用设备
+driverfiles             列出设备安装的驱动文件.
+drivernodes         显示设备的所有节点的驱动.
+enable                   用指定的硬件名称或者instance ID启用设备.
+find                        用指定的硬件名称或者instance ID查找设备.
+findall                    查找所有硬件设备包括不显示的.
+help                        显示帮助信息.
+hwids                     显示设备硬件ID.
+install                     手动安装设备.
+listclass                 显示所有设备的安装 class.
+reboot                    重启本地机器.
+remove                   用指定的硬件名称或者instance ID删除设备.
+rescan                    从新扫描硬件信息.
+resources               显示设备使用的硬件资源.
+restart                     用指定的硬件名称或者instance ID重启设备.
+stack                       列出设备的驱动堆栈.
+status                     列出设备的状态.
+update                    手动更新设备驱动.
+updateNI               不显示用户界面的更新设备状态
+SetHwID                添加、删除、编辑硬件ID的顺序.
+ 
+
+
+现在看看例子:
+
+devcon -m:\\test find pci\*
+
+如果你开启了test机器上的IPC$的话，就可以列出test上所有知道的PCI设备
+
+devcon -r install %WINDIR%\Inf\Netloop.inf *MSLOOP
+
+安装一个新的Microsoft loopback adaptor实例，如果要重启的话，该命令会自动重启
+
+devcon classes
+
+显示所有知道的安装类。包括未认识的设备如： "USB" 和描述名字如："Universal Serial Bus controllers". 
+
+devcon classfilter upper !filter1 !filter2
+
+删除两个指定的classfilter .
+
+devcon classfilter lower !badfilter +goodfilter
+
+ 用"goodfilter"替换"badfilter".
+
+devcon driverfiles =ports
+
+列出被ports安装类使用的设备驱动文件
+
+devcon disable *MSLOOP
+
+禁用所有硬件ID结尾有"MSLOOP"的设备
+
+devcon drivernodes @ROOT\PCI_HAL\PNP0A03
+
+列出所有 ROOT\PCI_HAL\PNP0A03的兼容驱动. 
+
+devcon enable '*MSLOOP
+
+启用所有硬件ID有"*MSLOOP". 用'修饰的*不再是通配符，而是普通字符
+
+devcon find *
+
+列出所有设备实例. 
+
+devcon find pci\*
+
+列出所有本地的PCI设备
+
+devcon find =ports *pnp*
+
+列出 ports 中包含"PNP"的硬件设备. 
+
+devcon find =ports @root\*
+
+列出所有在顶层的 ports . 
+
+devcon listclass usb 1394
+
+显示安装类是 USB 和 1394的设备. 
+
+devcon remove @usb\*
+
+删除所有USB设备 
+
+devcon rescan
+
+重新扫描即插即用设备. 
+
+devcon resources =ports
+
+列出ports 使用的资源. 
+
+devcon restart =net @'ROOT\*MSLOOP\0000
+
+重启 loopback adaptor ROOT\*MSLOOP\0000. 
+
+devcon hwids=mouse
+
+显示所有鼠标设备.
+
+devcon sethwid @ROOT\LEGACY_BEEP\0000 := beep 
+
+关联设备 beep和the legacy beep device.
+
+devcon status @pci\*
+
+列出所有PCI设备的状态. 
+
+Lists the status of all COM ports. 
+
+devcon update mydev.inf *pnp0501
+
+强制更新硬件ID有pnp0501 的设备使用Mydev.inf 驱动. 
+执行该命令后可能返回结果1 级错误，除非你指定了 -r, 让机器自动重启. 
+错误等级：
+0：表示成功
+1：表示需要重启
+2：表示失败
+3：语法错误
+ 
+
+
+USB设备在Windows中的规律及USB设备标准，打开注册表编辑器开始从硬件相关的键值入手以寻找它们的相似之处及规律，最后定位到HKLM\SYSTEM\CurrentControlSet\Enum\USB，一一对比发现USB\Class_XX&SubClass_XX其有一定的规律，于是请出google高手相助，关键词CompatibleIDs在微软网站看到一点相关标准（微软标准并不是全部的标准），呵呵看来有希望了^_^，继续关键词USB Class，哈哈OK了！！www.usb.org 够标准了吧！好了闲话不多，开始分享我的劳动成果；-） 
+
+各设备分类标准 
+00　Use class information in the Interface Descriptors 
+01　Audio 
+02　Communications and CDC Control 
+03　HID (Human Interface Device) 
+05　Physical 
+06　Image 
+07　Printer 
+08　Mass Storage 
+09　Hub 
+0A　CDC-Data 
+0B　Smart Card 
+0D　Content Security 
+0E　Video 
+0F　Personal Healthcare 
+DC　Diagnostic Device 
+E0　Wireless Controller 
+EF　Miscellaneous 
+FE　Application Specific 
+FF　Vendor Specific 
+
+英文不好以上不作翻译了 
+
+禁用某设备方法devcon.exe disable USB\Class_XX 
+启用某设备方法devcon.exe enable USB\Class_XX （其中XX就是上面绿色部分序号） 
+例： 
+devcon.exe disable USB\Class_08 
+禁用U盘，即删除U盘，不管你有N个U盘统统一起删除 
+devcon.exe disable USB\Class_06 
+禁用数码相机，包括数码相机附带的可移动磁盘 
+devcon.exe disable USB\Class_03 
+禁用USB鼠标&键盘 
+devcon.exe disable USB\Class_ff 
+禁用摄像头，看你还臭美；-） 
+禁用&启用USB设备就如此简单
+

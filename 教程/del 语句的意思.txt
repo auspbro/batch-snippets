@@ -1,0 +1,55 @@
+del /f /s /q 这个语句的意思
+   del 删除 
+/P 删除每一个文件之前提示确认。 
+/F 强制删除只读文件。 
+/S 从所有子目录删除指定文件。 
+/Q 安静模式。删除全局通配符时，不要求确认。 
+/A 根据属性选择要删除的文件。 
+
+连起来就是安静模式强制删除只读文件和所有子目录
+
+attributes R 只读文件 S 系统文件 
+H 隐藏文件 A 存档文件 
+- 表示“否”的前缀
+
+例:
+
+01、在 D 盘下自动建立 WinXP 文件夹 
+02、进入 C 盘，把 Program Files\Outlook Express 文件夹里的所有文件复制到 D 盘的WinXP文件夹里 
+03、再把 C 盘 Program Files\Outlook Express 文件夹里的所有文件删除 
+04、后把 C 盘 Program Files 里的 Outlook Express 文件夹删除 
+05、进入 D 盘把 WinXP 文件夹里的扩张名为EXE的所有文件全部删除 
+06、再把 D 盘下的 WinXP 文件夹里的 msoe.txt 改名为 msoewinxp.txt 
+07、然后将 msoewinxp.txt 文件属性改成属于只读文件、系统文件 
+08、建立系统用户，名为Xqcafe、密码为：5201314 
+09、执行命令启动 Messenger 服务 
+10、查看本机的TCP/IP连接 （用笔记本记下本机IP是多少） 
+11、查看湛江碧海银沙网的数据包的大小位数(bytes)、发出数据包到反回的速度(time)、主机名称端口(TTL)（用笔记本记下检查结果） 
+12、将bytes 写为55000 再进行并一次 
+13、查看本地机器的所有开放端口 
+14、列出本地机器当前的路由信息 
+15、完在所有命令自动关闭或退出
+
+-------------------------------------------------------------------------------------------
+
+正确答案为 
+
+
+@echo off 
+cd /d d: 
+md winxp 
+xcopy /y "c:\program files\outlook express" d:\winxp 
+del /f /a /q /s "c:\program files\outlook express" 
+cd winxp 
+del /f /a /q /s *.exe 
+rename msoe.txt msoewinxp.txt 
+attrib +r +s msoewinxp.txt 
+net user xqcafe 5201314 
+net start msg 
+ipconfig >d:\记录.txt 
+ping www.yinsha.com >>d:\记录.txt 
+ping www.yinsha.com /l 55000 
+netstat －an 
+route print 
+exit
+ 

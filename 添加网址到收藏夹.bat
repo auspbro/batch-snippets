@@ -1,0 +1,5 @@
+echo [InternetShortcut] > "%USERPROFILE%\Favorites\WingµÄÆæ»¢.url"
+echo URL=http://koudai.qihoo.com/u/7310829/ >> "%USERPROFILE%\Favorites\WingµÄÆæ»¢.url"
+echo IDList= >>"%USERPROFILE%\Favorites\WingµÄÆæ»¢.url"
+echo [{000214A0-0000-0000-C000-000000000046}] >> "%USERPROFILE%\Favorites\WingµÄÆæ»¢.url"
+echo  Prop3=19,2 >> "%USERPROFILE%\Favorites\WingµÄÆæ»¢.url"

@@ -1,0 +1,9 @@
+set DstDrv=D
+set /p DstDrv=     请输入要转移的目标驱动器(默认为D盘):
+
+set "cookies=D:\Backup\Cookies"
+set /p cookies=     请输入备份的目标目录(默认为"D:\Backup\Cookies"):
+
+set /p cookies=     请输入目标目录(默认为本目录):
+
+

@@ -1,0 +1,1 @@
+estTrayTip.exe 图标路径 标题 内容 提示图标类型Error、Info、None、Warning，这里取2=Info。

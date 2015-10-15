@@ -1,0 +1,7 @@
+:: 设置壁纸
+SetWallPaper.exe "c:\Test.bmp"
+:: SetWallPaper.exe "c:\Test.jpg"
+
+:: 获取壁纸所在路径。
+SetWallPaper.exe /where
+

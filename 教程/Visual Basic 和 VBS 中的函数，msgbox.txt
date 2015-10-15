@@ -1,0 +1,195 @@
+Visual Basic 和 VBS 中的函数，可实现弹出窗口.
+
+　　作用：在对话框中显示消息，等待用户单击按钮，并返回一个 Integer 告诉用户单击哪一个按钮。
+
+　　语法：
+
+　　MsgBox(prompt[, buttons] [, title] [, helpfile, context])
+
+　　参数说明：
+
+　　MsgBox 函数的语法具有以下几个命名参数：
+
+　　Prompt-------必需的。字符串表达式，作为显示在对话框中的消息。prompt 的最大长度大约为 1024 个字符，由所用字符的宽度决定。如果 prompt 的内容超过一行，则可以在每一行之间用回车符 (Chr(13))、换行符 (Chr(10)) 或是回车与换行符的组合 (Chr(13) & Chr(10)) 将各行分隔开来。
+
+　　Buttons-------可选的。数值表达式是值的总和，指定显示按钮的数目及形式，使用的图标样式，缺省按钮是什么以及消息框的强制回应等。如果省略，则 buttons 的缺省值为 0。
+
+　　Title-------可选的。在对话框标题栏中显示的字符串表达式。如果省略 title，则将应用程序名放在标题栏中。
+
+　　Helpfile--------可选的。字符串表达式，识别用来向对话框提供上下文相关帮助的帮助文件。如果提供了 helpfile，则也必须提供 context。
+
+　　Context-------可选的。数值表达式，由帮助文件的作者指定给适当的帮助主题的帮助上下文编号。如果提供了 context，则也必须提供 helpfile。
+
+　　用于MsgBox函数中Buttons参数的常量
+
+　　常量值 说明
+
+　　vbOKOnly 0 只显示“确定”按钮（缺省值）
+
+　　VbOKCancel 1 显示“确定”和“取消”按钮
+
+　　VbAbortRetryIgnore 2 显示“终止”、“重试”和“忽略” 按钮
+
+　　VbYesNoCancel 3 显示“是”、“否”和“取消”按钮
+
+　　VbYesNo 4 显示“是”和“否”按钮
+
+　　VbRetryCancel 5 显示“重试”和“取消”按钮
+
+　　VbCritical 16 显示“关键信息”图标
+
+　　VbQuestion 32 显示“警告询问”图标
+
+　　VbExclamation 48 显示“警告消息”图标
+
+　　VbInformation 64 显示“通知消息”图标
+
+　　vbDefaultButton1 0 第一个按钮是缺省值(缺省设置)
+
+　　vbDefaultButton2 256 第二个按钮是缺省值
+
+　　vbDefaultButton3 512 第三个按钮是缺省值
+
+　　vbDefaultButton4 768 第四个按钮是缺省值
+
+　　vbApplicationModal 0 应用程序强制返回；应用程序一直被挂起，直到用户对消息框
+
+　　作出响应才继续工作
+
+　　vbSystemModal 4096 系统强制返回；全部应用程序都被挂起，直到用户对消息框作
+
+　　出响应才继续工作
+
+　　vbMsgBoxHelpButt 16384 将Help按钮添加到消息框
+
+　　on
+
+　　VbMsgBoxSetFore 65536 指定消息框窗口作为前景窗口
+
+　　ground
+
+　　vbMsgBoxRight 524288 文本为右对齐
+
+　　vbMsgBoxRtlRe 1048576 指定文本应为在希伯来和阿拉伯语系统中的从右到左显示
+
+　　ading
+
+　　说明：
+
+　　(1)第一组值(0–5)描述了消息框中显示的按钮的类型与数目；第二组值(16,32,48,64)描述了图标的样式；第三组值(0,256,512,768)说明哪一个按钮是缺省值；而第四组值(0,4096)则决定消息框的强制返回性。将这些数字相加以生成Buttons参数值的时候，只能由每组值取用一个数字。
+
+　　(2)这些常数都是 Visual Basic for Applications (VBA) 指定的。结果，可以在程序代码中到处使用这些常数名称，而不必使用实际数值。实际数值与常数名称是等价的。
+
+　　返回值
+
+　　用于MsgBox函数返回值的常量
+
+　　常数值 说明
+
+　　vbOK 1 确定
+
+　　vbCancel 2 取消
+
+　　vbAbort 3 终止
+
+　　vbRetry 4 重试
+
+　　vbIgnore 5 忽略
+
+　　vbYes 6 是
+
+　　vbNo 7 否
+
+　　(1) 如果同时提供了Helpfile与Context参数，可以按F1键来查看与Context相应的帮助主题，Excel通常会在输入框中自动添加一个帮助(Help)按钮。
+
+　　(2)若在消息框中显示“取消”按钮，则按下ESC键与单击“取消”按钮效果相同。若消息框中有“帮助”按钮，则提供相关的帮助信息。
+
+　　(3)如果要输入多个参数并省略中间的某些参数，则必须在相应位置加入逗号分界符。
+
+　　示例
+
+　　(1)(1)使用 MsgBox 函数，在具有“是”及“否”按钮的对话框中显示一条严重错误信息。示例中的缺省按钮为“否”，MsgBox函数的返回值视用户按哪一个钮而定。并假设DEMO.HLP为一帮助文件，其中有一个帮助主题代码为1000。
+
+　　Dim Msg,Style,Title,Help,Ctxt,Response,MyString
+
+　　Msg="Do you want to continue ?" ’定义消息文本
+
+　　Style = vbYesNo + vbCritical + vbDefaultButton2 ' 定义按钮
+
+　　Title = "MsgBox Demonstration" ' 定义标题文本
+
+　　Help = "DEMO.HLP" ' 定义帮助文件
+
+　　Ctxt = 1000 ' 定义帮助主题
+
+　　Response = MsgBox(Msg, Style, Title, Help, Ctxt)
+
+　　If Response = vbYes Then ' 用户按下“是”
+
+　　MyString = "Yes" ' 完成某操作
+
+　　Else ' 用户按下“否”
+
+　　MyString = "No" ' 完成某操作
+
+　　End If
+
+　　(2)只显示某消息
+
+　　MsgBox “Hello!”
+
+　　(3)将消息框返回的结果赋值给变量
+
+　　Ans=MsgBox(“Continue?”,vbYesNo)
+
+　　If MsgBox(“Continue?”,vbYesNo)<>vbYes Then Exit Sub
+
+　　(4)使用常量的组合，赋值组Config变量，并设置第二个按钮为缺省按钮
+
+　　Config=vbYesNo+vbQuestion+vbDefaultButton2
+
+　　(5)若要在消息中强制换行，可在文本中使用vbCrLf(或vbNewLine)常量，用&（或+）加空格与字符隔开。如
+
+　　MsgBox “This is the first line.” & vbNewLine & “Second line.”
+
+　　(6)可以在消息框中使用vbTab常量插入一个制表符。下面的过程使用一个消息框来显示5×5单元格区域中的所有值，用vbTab常量分隔列并使用vbCrLf常量插入一个新行。注意在MsgBox函数最多只显示1024个字符，因此限制了可显示的单元格数。
+
+　　Option Explicit
+
+　　Sub ShowRangeValue()
+
+　　Dim Msg As String
+
+　　Dim r As Integer, c As Integer
+
+　　Msg = ""
+
+　　For r = 1 To 5
+
+　　For c = 1 To 5
+
+　　Msg = Msg & Cells(r, c) & vbTab
+
+　　Next c
+
+　　Msg = Msg & vbCrLf
+
+　　Next r
+
+　　MsgBox Msg
+
+　　End Sub
+
+　　(7)在消息框语句中运用工作表函数以及设置显示的数置格式，如下面语句所示：
+
+　　MsgBox " selection has " & m & " cells ." & Chr(13) & " the sum is :" & Application.WorksheetFunction.Sum(Selection) & Chr(13) & "the average is :" & Format(Application.WorksheetFunction.Average(Selection), "#,##0.00"), vbInformation, "selection count & sum & average" & Chr(13)
+
+　　例
+
+　　private sub form_load() '事件窗体加载
+
+　　msgbox("弹出窗口") '设定弹出窗口
+
+　　end sub '
+
+　　图片中的代码： MsgBox "警告内容!", 26, "警告!"

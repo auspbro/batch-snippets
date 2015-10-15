@@ -1,0 +1,9 @@
+1、修改注册表的方法要重启才生效（永久的）
+reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v path /d "%path%;C:\" /f
+
+2、使用WMIC，立即生效（永久的）
+wmic ENVIRONMENT where "name='path' and username=''" set VariableValue='%path%;C:\'
+把C:\这个路径添加到path的变量中
+
+3、要在批处理中立即生效（只是临时的，退出批处理后消失），P中加一句：
+path=%path%;C:\

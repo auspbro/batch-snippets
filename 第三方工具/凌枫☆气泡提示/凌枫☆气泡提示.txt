@@ -1,0 +1,19 @@
+参数格式:
+[ShowsTime];;[Title[#@TitleIcoType]];;Text;;[ClickRun_FilePath[##]];;[TrayIco_FilePath]
+
+ShowsTime         气泡显示时间 单位Ms
+Text              内容(支持 \n 回车转义符)
+Title             标题
+TitleIcoType      标题图标类型　0:无图标、1:询问图标、2:感叹图标、3:错误图标、4:同托盘图标
+ClickRun_FilePath 鼠标正键点击气泡后 运行的外部程序
+##                无窗口运行点击气泡后的外部程序
+TrayIco_FilePath  自定义托盘图标文件路径　(支持XP样式的 .Ico图标!)
+
+注:   "[ ]"       中为可选参数、参数分隔符为两个西文半角的分号
+
+
+各项参数的缺省值: 标题图标为提示图标、显示7000ms、无托盘图标、无点击气泡后执行的命令
+
+
+调用举例:
+"程序路径"  9000;;凌枫工作组#@2;;By T_kaven\nQQ群:35962310\n\n点击我 打开记事本;;%Windir%\Notepad.exe

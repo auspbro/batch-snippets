@@ -1,0 +1,54 @@
+CMDOW [window | /T] [/B] [/F] [/P]
+
+例：执行cmdow @，显示为
+Handle Lev Pid -Window status- Image    Caption
+0x230088 1 3356 Res Act Ena Vis cmd      C:\WINDOWS\system32\cmd.exe - cmd - cm
+
+window                     指定要列出的窗口，使用窗口标题或句柄来指定，没有标题的用窗口类代替。如果没有指定则列出所有窗口。“@”表示此窗口，即命令行窗口。
+/T                             只列出任务栏的窗口
+/B                             如上面的例子，加这个参数则不显示第一行
+/F                             显示完整标题
+/P                             列出窗口位置、宽与高
+                                         另外
+Handle                     句柄，16进制格式
+Window status           窗口状态（Minimized, Maximized, Restored, Active, Inactive, Enabled, Disabled, Visible or Hidden）
+
+
+CMDOW /TH | /TV | /CW | /MA | /UW | /AT | /FS | /WM/TH                           横向平铺窗口
+/TV                           纵向平铺窗口
+/CW                         层叠窗口
+/MA                          最小化所有窗口
+/UW                         取消/TH, /TV, /CW , /MA
+/AT                          相当与Alt+Esc
+/FS                          全屏命令行窗口，相当于Alt+Enter
+/WM                        取消全屏，即再按一次Alt+Enter
+
+
+CMDOW window {[/ACT] [/INA] [/ENA] [/DIS] [/VIS] [/HID] [/MIN] [/MAX] [/RES] [/TOP] [/NOT] [/REN caption] [/MOV left top] [/SIZ width height] [/CLS] [/END]}/ACT                     激活指定窗口
+/INA                       不知有啥用
+/DIS                       把窗口变为“只许看不准摸”：无法移动、鼠标左右键无效，更别说输入了。但可以用快捷键关闭。
+/ENA                      解除/DIS
+/HID                       隐藏窗口，任务栏和托盘皆看不到
+/VIS                       显示被隐藏的窗口
+/MIN                       最小化指定窗口
+/MAX                      最大化指定窗口
+/RES                      撤销。比如撤销到窗口原来的大小和位置。不能撤销两次，撤销后不可以返回撤销前的状态。
+/TOP                      置顶窗口。如置顶了多个，则第一个置顶在最上面，置顶了的都会保留置顶状态。
+/NOT                      取消窗口置顶
+/REN caption          重命名窗口标题
+/MOV left top          移动窗口 距左边距离 距上边距离
+/SIZ width height     改变窗口宽、高
+/CLS                       关闭窗口
+/END                       结束进程。恐怖的是相同PID的会一起Kill掉，小心使用！
+
+
+CMDOW /RUN [state] file [args]state                       运行方式（/MIN /MAX /HID）
+args                        是什么意思？？Optional arguments passed on to the application. Specify any args exactly as you would if executing/opening the file directly.
+
+
+-----------------------------------------------------------------------------
+此工具 能实现个不错的功能---关闭任务栏所有窗口 
+@echo off
+cmdow @ /hid
+for /f %%a in ('cmdow /t') do cmdow %%a /cls
+-----------------------------------------------------------------------------

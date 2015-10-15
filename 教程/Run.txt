@@ -1,0 +1,49 @@
+Run 方法
+请参阅
+WshShell 对象
+在新过程中运行程序。
+
+object.Run(strCommand, [intWindowStyle], [bWaitOnReturn]) 
+参数
+object 
+WshShell 对象。 
+strCommand 
+表示要运行的命令行的字符串值。必须包括要传递到可执行文件的所有参数。 
+intWindowStyle 
+可选。表示程序窗口外观的整数值。请注意，并非所有程序都使用此信息。 
+bWaitOnReturn 
+可选。布尔值，表示在继续执行脚本中的下一条语句之前，脚本是否等待执行完程序。如果设为 true，则在执行完程序后才执行脚本，Run 方法返回由程序返回的任何错误代码。如果设为 false（默认值），则 Run 方法将自动在启动程序后立即返回 0（不是错误代码）。 
+说明
+Run 方法返回一个整数。Run 方法启动在新 Windows 进程中运行的程序。可以让脚本等到程序执行完后再继续执行。这允许您同步运行脚本和程序。strCommand 参数内的环境变量自动扩展。如果某个文件类型已正确注册到某个程序中，则对该类型的文件调用 Run 方法时将执行该程序。例如，如果您的计算机系统中装有 Word，则对 *.doc 文件调用 Run 方法时将启动 Word 并加载该文档。下表列出了 intWindowStyle 的可用设置。
+
+intWindowStyle 说明 
+0 隐藏一个窗口并激活另一个窗口。 
+1 激活并显示窗口。如果窗口处于最小化或最大化状态，则系统将其还原到原始大小和位置。第一次显示该窗口时，应用程序应指定此标志。 
+2 激活窗口并将其显示为最小化窗口。 
+3 激活窗口并将其显示为最大化窗口。 
+4 按最近的窗口大小和位置显示窗口。活动窗口保持活动状态。 
+5 激活窗口并按当前的大小和位置显示它。 
+6 最小化指定的窗口，并按照 Z 顺序激活下一个顶部窗口。 
+7 将窗口显示为最小化窗口。活动窗口保持活动状态。 
+8 将窗口显示为当前状态。活动窗口保持活动状态。 
+9 激活并显示窗口。如果窗口处于最小化或最大化状态，则系统将其还原到原始大小和位置。还原最小化窗口时，应用程序应指定此标志。 
+10 根据启动应用程序的程序状态来设置显示状态。 
+
+示例 1
+下面的 VBScript 代码用记事本打开当前运行脚本的副本。
+
+Set WshShell = WScript.CreateObject("WScript.Shell")
+WshShell.Run "%windir%\notepad " & WScript.ScriptFullName
+下面的 VBScript 代码与上述代码完成的操作相同，不同之处在于，它指定窗口类型，等待用户关闭记事本，关闭记事本时保存从记事本返回的错误代码。
+
+Set WshShell = WScript.CreateObject("WScript.Shell")
+Return = WshShell.Run("notepad " & WScript.ScriptFullName, 1, true)
+示例 2
+下面的 VBScript 代码打开一个命令窗口，将路径改为 C:\，并执行 DIR 命令。
+
+Dim oShell
+Set oShell = WScript.CreateObject ("WSCript.shell")
+oShell.run "cmd /K CD C:\ & Dir"
+Set oShell = Nothing
+请参阅
+WshShell 对象 

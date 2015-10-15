@@ -1,0 +1,236 @@
+'发送html存在bug
+'on error resume next
+
+'第一次运行程序,添加注册表信息
+set ws = createobject("wscript.shell")
+if no1 = false then
+    number1
+end if
+
+'直接运行本程序弹出提示
+set args = wscript.arguments
+if args.count <> 2 then
+    if msgbox("请通过右键启动程序" & vbcrlf & "点击 取消 重新配置发信数据",65,"静飞 右键邮") = 1 then 
+        wscript.quit 
+    else 
+        call number1()
+    end if
+end if
+
+'判断注册表信息是否完整
+if isgetname = false then
+    msgbox "获取数据错误!" & vbcrlf & "请重新配置",48,"静飞 右键邮"
+    number1
+end if
+
+'获取参数信息
+arg = args(0)
+canshu = args(1)
+set fso = createobject("scripting.filesystemobject")
+tit = fso.getbasename(arg)
+ext = lcase(fso.getextensionname(arg))
+tit = chr(34) & tit & chr(34)
+
+
+'判断参数,选择发送方式
+if canshu = "z" then     '正文发送,判断是否适合以正文发送
+    ex = "h,c,js,cs,txt,vbs,hta,vbe,bat,cmd,ini,inf,au3,asm,log,lrc,jse,htm,cpp,css,doc,xml,php,wfx,kml,url,reg,key,wsc,wsf,mht,html,jsfl,docx"
+    if instr(ex,ext) = 0 then extnum = msgbox("您选择的文件可能不适合以正文发送,是否继续?",36,"静飞 右键邮")
+        if extnum = 6 then
+            set ado = createobject("adodb.stream")
+            ado.type = 1
+            ado.open
+            ado.loadfromfile arg
+            text = ado.read
+        else
+            set filee = fso.getfile(arg)
+            files = chr(34) & filee.path & chr(34)
+        end if
+    if instr(ex,ext) <> 0 then
+        if ext = "doc" or ext = "docx" then      'word文档,以word打开获取文字
+            set w = createobject("word.application")
+            w.visible = 0
+            w.documents.open arg
+            text = w.activedocument.content.text
+            w.quit
+        elseif ext = "htm" or ext = "html" then       '网页文件,判断发送方式
+            htmnum = msgbox("点击 是 仅发送网页文字" & vbcrlf & "点击 否 以txt发送网页文件" & vbcrlf & "点击 取消 已html发送网页文件",35,"静飞 右键邮")
+            if htmnum = 6 then
+                Set iee = CreateObject("InternetExplorer.Application")
+                iee.Navigate arg
+                do until iee.readystate = 4
+                    wscript.sleep 50
+                loop
+                text = iee.Document.Body.InnerText
+                iee.quit
+            else
+                set te = fso.opentextfile(arg)
+                text = te.readall
+                te.close
+            end if
+       else
+            set te = fso.opentextfile(arg)
+            text = te.readall
+            te.close
+       end if
+    end if    
+elseif canshu = "f" then    '附件发送
+    set filee = fso.getfile(arg)
+    files = chr(34) & filee.path & chr(34)
+else
+    msgbox "参数错误!",16,"静飞 右键邮"
+    wscript.quit
+end if
+
+call smail()            '发送
+
+'**************************************************************************
+sub number1()       '第一次运行,配置数据主程序
+on error resume next
+set ws = createobject("wscript.shell")
+    call set1()
+    call addreg()
+    wscript.sleep 500
+    do
+        ws.run "c:\yjy.hta",1,true
+    loop until isgetname = true
+        msgbox "配置成功!" & "请通过右键启动程序.",64,"静飞 右键邮"
+        ws.run "cmd /c del c:\yjy.hta",0
+        wscript.quit
+end sub
+'***********************************************************************************
+sub addreg()       '向注册表写入右键信息
+on error resume next
+ lujing = chr(34) & wscript.scriptfullname & chr(34)
+ set ws = createobject("wscript.shell")
+ ws.regwrite "HKCR\*\Shell\\以正文发送\Command\","wscript.exe " & lujing & " " & chr(34) & "%1" & chr(34) & " z"
+ ws.regwrite "HKCR\*\Shell\\以附件发送\Command\","wscript.exe " & lujing & " " & chr(34) & "%1" & chr(34) & " f"
+ ws.regwrite "HKLM\SOFTWARE\rightemail\emailadd\adds","作者Email,xiaomingtt@126.com,作者QQ,330404116@qq.com","REG_SZ"
+end sub
+'***************************************************************
+function no1()        '判断是否为第一次使用
+ on error resume next
+ set ws = createobject("wscript.shell")
+ iempty = ws.regread("HKLM\SOFTWARE\rightemail\user")
+ if iempty = "" then ise = false else ise = true
+ no1 = ise
+end function
+'***************************************************************
+function isgetname()          '判断注册表数据完整性
+ on error resume next
+ uu = "":pp = "":sm = ""
+ isgetname= true
+ set ws = createobject("wscript.shell")
+ uu = ws.regread("HKLM\SOFTWARE\rightemail\user")
+ pp = ws.regread("HKLM\SOFTWARE\rightemail\pass")
+ sm = ws.regread("HKLM\SOFTWARE\rightemail\smtp")
+ if uu = "" or pp = "" or sm = "" then isgetname = false
+end function
+'***************************************************************
+sub set1()                 '第一次使用，配置数据功能模块
+ on error resume next
+ set fso = createobject("scripting.filesystemobject")
+ set ie = fso.createtextfile("c:\yjy.hta")
+ ie.write "<html><head><title>静飞 VBS右键邮 -by:xiaomingtt</title></head><body>"
+ ie.write vbcrlf&"<p><h1 align = center>VBS 右键邮</h1></p><p align=center>by  xiaomingtt</p>"
+ ie.write vbcrlf&"<p><a href=http://hi.baidu.com/loveee>http://hi.baidu.com/loveee</a></p><p>这是您第一次运行本程序，请配置相关数据:<br>注意:发信邮箱需支持SMTP</p><br><br>"
+ ie.write vblf&"<table width = 70% border = 3 cellspacing = 10 cellpadding = 2 class = modth><tr>"
+ ie.write chr(10)&"<p><td>输入发信地址：</td><td><input type = text name = mailname id = mailname onchange = ce()></td></p></tr><tr>"
+ ie.write chr(13)&"<P><td>输入用户名：</td><td><input type = text name = username id = username></td></p></tr><tr>"
+ ie.write vbcrlf&"<p><td>输入密码：</td><td><input type = password name = password id = password></td></p></tr><tr>"
+ ie.write vbcrlf&"<p><td>输入SMTP地址：</td><TD><input type = text name = smtp id = smtp></td></p></tr>"
+ ie.write vbcrlf&"<td><input type = button value = 确定 onclick = ok() name = ok id = ok></td></table>"
+ ie.write vbcrlf&"<script language = vbscript>"&vbcrlf&"sub ce()"&vbcrlf&"mail = document.getelementbyid("&chr(34)&"mailname"&chr(34)&").value"&vbcrlf&"if isregu("&chr(34)&"\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*"&chr(34)&",mail) = false then"&vbcrlf&"msgbox "&chr(34)&"请输入正确的邮箱地址"&chr(34)&",16,"&chr(34)&"错误"&chr(34)&vbcrlf&"document.getelementbyid("&chr(34)&"mailname"&chr(34)&").value = "&chr(34)&chr(34)&vbcrlf&"exit sub"&vbcrlf&"end if"&vbcrlf&"users = split(mail,"&chr(34)&"@"&chr(34)&chr(41)&vbcrlf&"document.getelementbyid("&chr(34)&"username"&chr(34)&").value = users(0)"&vbcrlf&"document.getelementbyid("&chr(34)&"smtp"&chr(34)&").value = "&chr(34)&"smtp."&chr(34)&"&users(1)"&vbcrlf&"end sub"
+ ie.write vbcrlf&"function isregu(regu,s)"&vbcrlf&"set re = new regexp"&vbcrlf&"re.pattern = regu"&chr(13)&"sre = re.test(s)"&vbcrlf&"if sre = true then"&chr(13)&"isregu = true"&vbcrlf&"else"&vblf&"isregu = false"&vbcrlf&"end if"&vbcrlf&"end function"
+ ie.write vbcrlf&"sub ok()"&vbcrlf&"on error resume next"&vbcrlf&"m = document.getelementbyid("&chr(34)&"mailname"&chr(34)&").value"&vbcrlf&"u = document.getelementbyid("&chr(34)&"username"&chr(34)&").value"&vbcrlf&"p = document.getelementbyid("&chr(34)&"password"&chr(34)&").value"&vbcrlf&"s = document.getelementbyid("&chr(34)&"smtp"&chr(34)&").value"&vbcrlf&"if m = "&chr(34)&chr(34)&" or u = "&chr(34)&chr(34)&" or p = "&chr(34)&chr(34)&" or s = "&chr(34)&chr(34)&" then exit sub"&vbcrlf&"set ws = createobject("&chr(34)&"wscript.shell"&chr(34)&chr(41)&vbcrlf&"ws.regwrite "&chr(34)&"HKLM\SOFTWARE\rightemail\user"&chr(34)&",u,"&chr(34)&"REG_SZ"&chr(34)&vbcrlf&"ws.regwrite "&chr(34)&"HKLM\SOFTWARE\rightemail\pass"&chr(34)&",p,"&chr(34)&"REG_SZ"&chr(34)&vbcrlf&"ws.regwrite "&chr(34)&"HKLM\SOFTWARE\rightemail\smtp"&chr(34)&",s,"&chr(34)&"REG_SZ"&chr(34)&vbcrlf&"window.close"&vbcrlf&"end sub"
+ ie.write vbcrlf&"</script>"&vbcrlf&"</body></html>"
+ ie.close
+end sub
+'*************************************************************************
+sub smail()                '  发送邮件
+'on error resume next
+'获取注册表中保存的设置信息
+fromadd = ws.regread("HKLM\SOFTWARE\rightemail\user")
+frompass = ws.regread("HKLM\SOFTWARE\rightemail\pass")
+fromsmtp = ws.regread("HKLM\SOFTWARE\rightemail\smtp")
+adds = ws.regread("HKLM\SOFTWARE\rightemail\emailadd\adds")
+
+addd = split(adds,",")        '获取地址簿列表
+for i = 0 to ubound(addd) step 2
+    ads = ads & "<option value=" & addd(i+1) & ">" & addd(i) & "</option>"
+next
+
+set ie = fso.createtextfile("c:\sendmail.hta")
+
+ie.write "<html><head><title>静飞 右键邮 - by:xiaomingtt</title></head><body><h1 align = center>VBS 右键邮</h1>" & vbcrlf
+ie.write "<table width = 74% border = 3 cellspacing = 5 cellpadding = 2 align=center><thead><tr><th colspan=2>发信设置</th></tr></thead>" & vbcrlf
+ie.write "<tr><td>收信</td><td><input type=text name=getname id=getname size=40 onchange=ce1()></td><td><select size=1 name=mail id=mail onchange=msg()><option>选择收件人地址</option>" & ads
+ie.write "</select></td></tr>" & vbcrlf & "<tr><td>抄送</td><td id=chao><a href=# onclick=chaot()>添加抄送</a></td><td id=chaoa>选择收件人地址</td></tr>" & vbcrlf
+ie.write "<tr><td>密送</td><td id=mi><a href=# onclick=mit()>添加密送</a></td></td><td id=mia>选择收件人地址</td></tr>" & vbcrlf
+
+if canshu = "f" or extnum = 7 then         '已选择附件
+    ie.write "<tr><td>附件</td><td><input type=text name=file id=file value=" & files & " size=40></td><td><input type=checkbox name=rar id=rar value=rar>压缩附件</td></tr>" & vbcrlf
+else
+    ie.write "<tr><td>附件</td><td id=fu><a href=# onclick=fut()>添加附件</a></td><td id=ra>压缩附件</td></tr>" & vbcrlf
+end if
+
+ie.write "<tr><td>标题</td><td><input type=text name=timu id=timu size=40 value=" & tit & "></td></tr>" & vbcrlf
+
+if htmnum = 7 then      '正文,html文件
+    ie.write "<tr><td>正文</td><td><textarea name=zhengwen id=zhengwen cols=40 rows=10>" & text & "</textarea></td><td><input type=radio id=txt name=txt value=txt checked>txt<br><br><input type=radio name=txt id=txt value=html>html</td></tr>" & vbcrlf
+elseif htmnum = 2 then
+    ie.write "<tr><td>正文</td><td><textarea name=zhengwen id=zhengwen cols=40 rows=10>" & text & "</textarea></td><td><input type=radio id=txt name=txt value=txt>txt<br><br><input type=radio name=txt id=txt value=html checked>html</td></tr>" & vbcrlf
+else
+    ie.write "<tr><td>正文</td><td><textarea name=zhengwen id=zhengwen cols=40 rows=10>" & text & "</textarea></td><td><input type=radio id=txt name=txt value=txt checked>txt<br><br><input type=radio name=txt id=txt value=html>html</td></tr>" & vbcrlf
+end if
+
+ie.write "<tr><td><input type=button value=重填 onclick=reset()></td><td><input type=button value=发送 onclick=sendmail() style=width:100px></td></tr></table>" & vbcrlf
+
+s1 = "if isregu(" & chr(34) & "\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*" & chr(34) & ","
+s2 = ".value)=false then:msgbox " & chr(34) & "请输入正确的邮箱地址" & chr(34) & ",16," & chr(34) & "错误 - 静飞 右键邮" & chr(34) & ":"
+
+ie.write "<script language=vbscript>" & vbcrlf     '写入相关功能函数
+ie.write "sub chaot()" & vbcrlf & "chao.innerhtml=" & chr(34) & "<input type=text name=chaoname id=chaoname size=40 onchange=ce2()>" & chr(34) & vbcrlf & "chaoa.innerhtml=" & chr(34) & "<select size=1 name=mail1 id=mail1 onchange=msg1()><option>选择收件人地址</option>" & ads & "</select>" & chr(34) & vbcrlf & "end sub" & vbcrlf
+ie.write "sub mit()" & vbcrlf & "mi.innerhtml=" & chr(34) & "<input type=text name=miname id=miname size=40 onchange=ce3()>" & chr(34) & vbcrlf & "mia.innerhtml=" & chr(34) & "<select size=1 name=mail2 id=mail2 onchange=msg2()><option>选择收件人地址</option>" & ads & "</select>" & chr(34) & vbcrlf & "end sub" & vbcrlf
+ie.write "sub fut()" & vbcrlf & "fu.innerhtml=" & chr(34) & "<input type=file name=file id=file size=40>" & chr(34) & vbcrlf & "ra.innerhtml=" & chr(34) & "<input type=checkbox name=rar id=rar value=rar>压缩附件" & chr(34) & vbcrlf & "end sub" & vbcrlf
+ie.write "sub ce1()" & vbcrlf & s1 & "getname" & s2 & "getname.value=" & chr(34) & chr(34) & ":exit sub:end if" & vbcrlf & "end sub" & vbcrlf
+ie.write "sub ce2()" & vbcrlf & s1 & "chaoname" & s2 & "chaoiname.value=" & chr(34) & chr(34) & ":exit sub:end if" & vbcrlf & "end sub" & vbcrlf
+ie.write "sub ce3()" & vbcrlf & s1 & "miname" & s2 & "miname.value=" & chr(34) & chr(34) & ":exit sub:end if" & vbcrlf & "end sub" & vbcrlf
+ie.write "function isregu(regu,s)" & vbcrlf & "set re=new regexp:re.pattern=regu:sre=re.test(s):if sre=true then:isregu=true:else:isregu=false:end if" & vbcrlf & "end function" & vbcrlf
+ie.write "sub reset()" & vbcrlf & "on error resume next" & vbcrlf & "getname.value=" & chr(34) & chr(34) & ":chaoname.value=" & chr(34) & chr(34) & ":miname.value=" & chr(34) & chr(34) & ":file.value=" & chr(34) & chr(34) & ":zhengwen.value=" & chr(34) & chr(34) & ":timu.value=" & chr(34) & chr(34) & vbcrlf & "end sub" & vbcrlf
+ie.write "sub msg():on error resume next:getname.value=mail.value:end sub" & vbcrlf
+ie.write "sub msg1():on error resume next:chaoname.value=mail1.value:end sub" & vbcrlf
+ie.write "sub msg2():on error resume next:miname.value=mail2.value:end sub" & vbcrlf
+ie.write "function getpath():on error resume next:getpath = false" & vbcrlf
+ie.write "p = split(createobject(" & chr(34) & "wscript.shell" & chr(34) & ").RegRead(" & chr(34) & "HKCR\WinRAR\shell\open\command\\" & chr(34) & "),chr(34)&chr(32)&chr(34))" & vbcrlf
+ie.write "getpath = right(p(0),len(p(0)) - 1):end function" & vbcrlf
+ie.write "function chaos():on error resume next:chaos=chaoname.value:if err then:chaos=false:err.clear:end if:end function" & vbcrlf
+ie.write "function mis():on error resume next:mis=miname.value:if err then:mis=false:err.clear:end if:end function" & vbcrlf
+ie.write "function fus():on error resume next:fus=file.value:if err then:fus=false:err.clear:end if:end function" & vbcrlf
+ie.write "sub sendmail()" & vbcrlf & "on error resume next" & vbcrlf & "if trim(getname.value)=" & chr(34) & chr(34) & " or trim(timu.value)=" & chr(34) & chr(34) & " then:msgbox " & chr(34) & "请确保输入信息完整" & chr(34) & ",16," & chr(34) & "错误 - 静飞 右键邮" & chr(34) & ":exit sub:end if" & vbcrlf
+ie.write "NameSpace = " & chr(34) & "http://schemas.microsoft.com/cdo/configuration/" & chr(34) & vbcrlf & "Set Email = CreateObject(" & chr(34) & "CDO.Message" & chr(34) & chr(41) & vbcrlf
+ie.write "Email.From = " & chr(34) & fromadd & "@" & mid(fromsmtp,instr(fromsmtp,".")+1,len(fromsmtp)-instr(fromsmtp,".")+1) & chr(34) & vbcrlf & "Email.To = getname.value" & vbcrlf
+ie.write "if chaos <> false then Email.CC = chaos" & vbcrlf & "if mis <> false then Email.BCC = mis" & vbcrlf & "Email.Subject = timu.value" & vbcrlf
+ie.write "if txt(0).checked then" & vbcrlf & "Email.Textbody = zhengwen.value" & vbcrlf & "end if" & vbcrlf & "if txt(1).checked then" & vbcrlf & "Email.Htmlbody = zhengwen.value" & vbcrlf & "end if" & vbcrlf
+ie.write "if fus <> false and fus <> " & chr(34) & chr(34) & "then" & vbcrlf & "if rar.checked then" & vbcrlf & "if getpath = false then" & vbcrlf
+ie.write "msgbox " & chr(34) & "您可能未安装Winrar,无法使用压缩功能!" & chr(34) & ",48," & chr(34) & "静飞 右键邮" & chr(34) & vbcrlf & "fujian = fus" & vbcrlf & "else" & vbcrlf
+ie.write "ptt = left(getpath,instrrev(getpath,chr(92)))" & vbcrlf & "pro = chr(34) & ptt & " & chr(34) & "Rar.exe" & chr(34) & " & chr(34) & " & chr(34) & " a -m1 " & chr(34) & " & chr(34) & ptt & timu.value & " & chr(34) & ".rar" & chr(34) & " & chr(34) & chr(32) & chr(34) & fus & chr(34)" & vbcrlf
+ie.write "createobject(" & chr(34) & "wscript.shell" & chr(34) & ").run(pro),0,true" & vbcrlf & "fujian = ptt & timu.value & " & chr(34) & ".rar" & chr(34) & vbcrlf
+ie.write "end if" & vbcrlf & "else" & vbcrlf & "fujian = fus" & vbcrlf & "end if" & vbcrlf
+ie.write "Email.AddAttachment fujian" & vbcrlf & "end if" & vbcrlf & "With Email.Configuration.Fields" & vbcrlf & ".Item(NameSpace&" & chr(34) & "sendusing" & chr(34) & ") = 2" & vbcrlf
+ie.write ".Item(NameSpace&" & chr(34) & "smtpserver" & chr(34) & ") = " & chr(34) & fromsmtp & chr(34) & vbcrlf & ".Item(NameSpace&" & chr(34) & "smtpserverport" & chr(34) & ") = 25" & vbcrlf
+ie.write ".Item(NameSpace&" & chr(34) & "smtpauthenticate" & chr(34) & ") = 1" & vbcrlf & ".Item(NameSpace&" & chr(34) & "sendusername" & chr(34) & ") = " & chr(34) & fromadd & chr(34) & vbcrlf
+ie.write ".Item(NameSpace&" & chr(34) & "sendpassword" & chr(34) & ") = " & chr(34) & fromsmtp & chr(34) & vbcrlf & ".update" & vbcrlf & "end with" & vbcrlf & "Email.Send" & vbcrlf & "createobject(" & chr(34) & "wscript.shell" & chr(34) & ").run(" & chr(34) & "cmd /c del " & chr(34) & " & chr(34) & fujian & chr(34)),0" & vbcrlf
+ie.write "if err then" & vbcrlf & "msgbox " & chr(34) & "发送失败!" & chr(34) & ",16," & chr(34) & "静飞 右键邮" & chr(34) & vbcrlf & "else" & vbcrlf
+ie.write "msgbox " & chr(34) & "发送成功!" & chr(34) & ",64," & chr(34) & "静飞 右键邮" & chr(34) & vbcrlf & "adds = createobject(" & chr(34) & "wscript.shell" & chr(34) & ").regread(" & chr(34) & "HKLM\SOFTWARE\rightemail\emailadd\adds" & chr(34) & chr(41) & vbcrlf
+ie.write "if instr(adds,getname.value) = 0 then" & vbcrlf & "if msgbox(" & chr(34) & "是否将" & chr(34) & " & getname.value & " & chr(34) & "添加到通讯录?" & chr(34) & ",36," & chr(34) & "静飞 右键邮" & chr(34) & ") = 6 then" & vbcrlf
+ie.write "nm = inputbox(" & chr(34) & "输入用户名" & chr(34) & " & vbcrlf & getname.value," & chr(34) & "静飞 右键邮" & chr(34) & ",left(getname.value,instr(getname.value,chr(64))-1))" & vbcrlf
+ie.write "adds = adds & chr(44) & nm & chr(44) & getname.value" & vbcrlf & "createobject(" & chr(34) & "wscript.shell" & chr(34) & ").regwrite " & chr(34) & "HKLM\SOFTWARE\rightemail\emailadd\adds" & chr(34) & ",adds," & chr(34) & "REG_SZ" & chr(34) & vbcrlf 
+ie.write "end if" & vbcrlf & "end if" & vbcrlf & "window.close" & vbcrlf & "end if" & vbcrlf
+ie.write "end sub" & vbcrlf & "</script></body></html>"
+ie.close
+set ws = createobject("wscript.shell")
+ws.run "c:\sendmail.hta",1,true
+ws.run "cmd /c del c:\sendmail.hta",0
+end sub
+

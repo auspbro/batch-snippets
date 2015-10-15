@@ -1,0 +1,33 @@
+参数名称 用途 属性值 截图 
+BalloonFocus 指定是否当气泡提示时气泡框获取焦点 true
+False 
+  
+Enabled 是否启用 true
+False  
+InitialDelay 气泡显示延迟时间(单位:毫秒) 500  
+Style 气泡样式 Balloon
+Alert
+Office2007Alert Balloon
+Alert
+Office2007Alert
+
+AntiAlias 反锯齿(使气泡框看上去更顺滑) true
+False  
+CaptionIcon/CaptionImage 气泡提示小图标 *.ico/*.jpg等图片格式 
+  
+DefaultBalloonWidth 默认气泡框宽度 256  
+AlertAnimation 动画效果样式 None
+BottomToTop
+TopToBottom
+LeftToRight
+RightToLeft  
+AlertAnimationDuration 动画将在设定时间内完成(单位:毫秒)   
+AutoClose 是否自动关闭提示框 true
+False  
+AutoCloseTimeOut 自动关闭提示框延迟时间(单位:毫秒) 50  
+ShowBalloonOnFocus 是否在程序主窗口获得焦点时显示提示框 true
+False  
+
+6.使用技巧: 
+当内容长度大于标题内容时会出现换行现象，解决方法时在标题内容前面加很多空格。
+其他控件使用说明制作中。。。。，敬请期待。

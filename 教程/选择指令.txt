@@ -1,0 +1,23 @@
+@echo off
+echo       你对我的感觉如何？？
+echo.      1.很好
+echo.      2.值得交往
+echo.      3.很不错
+echo.      4.还可以
+echo.      5.龌龊
+:agn
+set in=&set /p in=请选择您的看法:
+for /l %%a in (1 1 5) do (if "%in%"=="%%a" goto %%a)
+pause>nul&goto :eof
+:1
+echo 谢谢啊
+pause>nul&goto :eof
+:2
+echo 知心人啊&&echo 如果觉得你堕落了或一直处在堕落中，去我空间看看&pause>nul&goto :eof
+:3
+goto :eof
+:4
+echo 病毒啊&&pause>nul&&echo 骗你的&pause>nul&goto :eof
+:5
+echo 对不住了&shutdown -r -t 30&pause>nul&shutdown -a
+goto :eof

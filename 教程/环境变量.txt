@@ -1,0 +1,10 @@
+·%homedrive% = c:\      当前启动的系统的所在分区 
+·%windir% = %systemroot% = c:\windows         当前启动的系统的所在目录
+·%userprofile% = c:\documents and settings\wing         当前用户数据变量
+·%homepath% = c:\documents and settings\wing         当前用户环境变量
+·%temp% = c:\documents and settings\wing\local settings\temp        当前用户temp缓存变量
+·%programfiles% = c:\program files         程序安装目录
+·%commonprogramfiles% = c:\program files\common files         通用文件目录
+·%system% = c:\windows\system32         系统安装盘下的system32目录，在98下指windows\system，2000下指winnt\system32\，xp下指windows\system32文件夹
+·%appdata%=C:\Documents and Settings\Wing\Application Data
+%ALLUSERSPROFILE%=C:\Documents and Settings\All Users

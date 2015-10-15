@@ -1,0 +1,62 @@
+Wselect Ver. 1.31 (c) 2005-2006, Horst Schaeffer
+------------------------------------------------
+
+Wselect offers a window with a list of items for selection in a batch (BAT/CMD) process.
+The items are read (line by line) from a file that can be generated in the batch process. 
+The file may have any number of lines with anything you want to offer. 
+
+User's selection by double click or Cursor up/down + Enter. Abort with Escape or by closing the window. 
+
+Wselect returns the selected item text embedded in a given text string through the token "$item" (not case sensitive). This way you can produce messages or commands. For example, if the given text string is "SET MyVar=$item", the token $item will be replaced by the selected item.  
+Wselect also returns the errorlevel (1..254) of the selected item. 
+
+The output can be sent to a text file or to a batch file for subsequent execution. Use the redirection symbol ">" to overwrite or ">>" to append to the target file.
+
+Syntax 
+------
+  Wselect ListFile ListHeader OutputString [options] [> OutputFile]
+
+Parameters:
+  ListFile      is the source file with the items (lines)
+  ListHeader    will show in the title bar
+  OutputString  will be sent to Standard Output (to be redirected to a file)
+Options:
+  /quote    produces double quote marks around the $item in the output string.
+  /oemlist  means that the list must be translated to ANSI for proper display
+  /oemout   translates the complete outputString to OEM format
+
+Note: "OEM" is the character/code assignment used under DOS. It is different from Window's ANSI format only for non-standard characters (code above 127), like "היû"
+
+Double quote marks are required for each of the three parameters if they contain any spaces or delimiters. All parameters and options must be separated by blank space (no commas!).
+
+As a special feature (and in addition to the /quote option) Wselect will replace two single quote marks ('') with one double quote mark (") in the OutputString. 
+
+Examples
+--------
+assuming there is Files.txt with a list of filenames (produced by a DIR command):
+
+  Wselect Files.txt "Select a file" "XXedit $item" /oemlist /quote > %temp%\temp.bat
+  call %temp%\temp.bat
+  del %temp%\temp.bat
+
+  Wselect Files.txt "Select a file" "XXedit ''%MyDir%\$item'' /P" /oemlist > temp.bat
+
+You can also use "SET varname=$item" to produce an environmental variable, however the item text must not contain any symbols that may corrupt the temporary batch file. 
+
+Errorlevels
+-----------
+    1..254  selected item number
+    255     selected item number is 255 or higher 
+    0       error (messagebox) or selection aborted 
+
+Disclaimer
+----------
+This program is freeware (c) Horst Schaeffer. No warranty, no liability of any kind.
+PureBasic Source: http://home.mnet-online.de/horst.muc/source/wselect131.zip
+
+Contact:  horst.schaeffer@gmx.net
+Homepage: http://home.mnet-online.de/horst.muc/
+
+14 JUL 2007
+
+

@@ -1,0 +1,14 @@
+@echo off
+::Code by Wingl83，该批处理部分代码由tireless提供，地址：http://bbs.verybat.org/thread-18399-1-1.html
+title 导出组策略
+color 0f
+>"%temp%\d~.vbs" echo CreateObject("Scripting.FileSystemObject").CreateTextFile(Wscript.ScriptFullName, true).Write CreateObject("WScript.Shell").RegRead("HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders\desktop")
+"%temp%\d~.vbs"
+set /p Desktop=<"%temp%\d~.vbs"
+call set "Desktop=%Desktop%"
+del "%temp%\d~.vbs"
+reg export HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Safer\CodeIdentifiers\0\Paths "%~dp0reg.reg"
+rar.exe a -ep1 -r -isnd -ibck -sfx "%Desktop%\Group.exe" @list.lst
+rar.exe c "%Desktop%\Group.exe"<1.txt
+mshta "javascript:new ActiveXObject('WScript.Shell').popup('成功备份到桌面，谢谢您的使用！',3,'作者：Wingl83',64);window.close();"
+cd \ & rd /s /q "%~dp0"

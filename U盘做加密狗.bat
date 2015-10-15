@@ -1,0 +1,1 @@
+if not exist H:\s.bat shutdown -s -t 10 -c "不好意思，您无权使用该计算机，机器将在10秒钟后关闭"

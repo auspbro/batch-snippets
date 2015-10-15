@@ -1,0 +1,1 @@
+gpupdate.exe /force

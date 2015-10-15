@@ -1,0 +1,1 @@
+MsgBox"已安装成功，谢谢您的使用。"&Chr(10)&Chr(10)&"作者：Wingl83", vbInformation, "安装成功"

@@ -1,0 +1,101 @@
+@echo off
+title XP/WMP/OFFICE/FLASH补丁自动安装    by:yxg8855
+color 1f
+echo ====================================================================
+
+ECHO.                         说 明：
+echo.
+echo.     请在批处理的同级目录中放置XPWMP、OFFICE、FLASH三个文件夹。
+echo.     分别把XP/WMP的补丁放在XPWMP文件夹里；
+echo.     把OFFICE的补丁放在OFFICE文件夹里；
+echo.     把FLASH的补丁放在FLASH文件夹里.
+echo.     
+echo.     如果您确定完成上面的设定，那么请按任意键开始选择！
+echo.
+echo =====================================================================
+pause>nul
+cls
+:cho
+echo.
+echo ------------------------------------------------------
+echo.              请选择要安装的补丁，然后按回车
+echo.------------------------------------------------------
+echo.                 
+echo.                  1.安装XP、WMP补丁
+echo.
+echo.                  2.安装OFFICE补丁
+echo.
+echo.                  3.安装FLASH for IE补丁
+echo.
+echo.                  4.清理安装痕迹
+echo.
+echo.                  0.退出              
+echo.
+echo.--------------------------------------------------------
+echo.
+set choice=
+set /p choice=              请选择对应的项目:
+IF NOT "%Choice%"=="" SET Choice=%Choice:~0,1%
+if /i "%choice%"=="1" goto XPwmp
+if /i "%choice%"=="2" goto office
+if /i "%choice%"=="3" goto flash
+if /i "%choice%"=="4" goto clean
+if /i "%choice%"=="0" goto end
+echo.
+echo 选择无效，请重新输入
+echo.
+goto cho
+
+:XPwmp
+cls
+echo 正在安装XP/wmp补丁...
+for %%i in (XPWMP\*.exe) do echo %%i... &start /wait %%i /quiet /norestart /nobackup
+echo XP/wmp补丁安装完毕！按任意键返回!
+pause >nul
+cls
+goto cho
+
+:office
+cls
+echo 正在安装OFFICE补丁...
+for %%i in (OFFICE\*.exe) do echo %%i... &start /wait %%i /Q:A /R:N
+echo office补丁安装完毕！按任意键返回!
+pause >nul
+cls
+goto cho
+
+:flash
+cls
+echo 正在安装FLASH补丁...
+for %%i in (FLASH\*.exe) do echo %%i... &start /wait %%i /S
+echo FLASH补丁安装完毕！按任意键返回!
+pause >nul
+cls
+goto cho
+
+:clean
+cls
+echo 正在清理系统安装痕迹...
+dir %systemroot%\$* /a:d /b >%systemroot%\del.txt
+for /f %%i in (%systemroot%\del.txt) do rd %systemroot%\%%i /s /q
+del %systemroot%\del.txt
+del /s /q "%ProgramFiles%\UPDATE\*.*"
+del /s /q "%ProgramFiles%\windowsUpdate\*"
+del /s /q %systemroot%\Installer\*.*
+del /s /q "%USERPROFILE%\Local Settings\Temporary Internet Files\*.*"
+del /s /q "%USERPROFILE%\Local Settings\Temp\*.*"
+del /F/S/Q %systemroot%\KB*.log
+del /F/S/Q %systemdrive%\*.chk
+del /F/S/Q %systemdrive%\*.old
+del /F/S/Q %systemdrive%\*.bak
+del /F/S/Q %systemdrive%\*.tmp
+del /F/S/Q %systemdrive%\*._mp
+echo 系统安装痕迹清理完毕！按任意键返回!
+pause >nul
+cls
+goto cho
+
+:end
+cls
+exit
+

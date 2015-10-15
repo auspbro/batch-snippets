@@ -1,0 +1,1 @@
+devcon.exe remove USB\Class_08

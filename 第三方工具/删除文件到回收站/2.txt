@@ -1,0 +1,4 @@
+Recycle.exe [-f] filename1 [filename2 ...]
+-f: Force recycle, no prompt for confirmation
+filenames can include wildcards.
+

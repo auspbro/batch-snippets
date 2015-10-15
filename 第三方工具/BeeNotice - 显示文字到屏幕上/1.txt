@@ -1,0 +1,82 @@
+BeeNotice Options
+All options are case insensitive.
+
+m : Notice Message
+Use "\n" to split lines.
+Usage) BeeNotice /m:"Hi~\nHello~"
+
+x : x-coordinate of starting position
+y : y-coordinate of starting position
+Default) Center of the screen
+Usage) BeeNotice /m:"Hello" /x:200 /y:200
+
+f : font name
+the typeface name of the font
+Default) "Tahoma"
+Usage) BeeNotice /m:"Hello" /f:"Arial"
+
+fh : height of font
+If this value is zero, default height value is used.
+Default) 0
+Usage) BeeNotice /m:"Hello" /fh:36
+
+fw : average character width（字符平均宽度）
+If this value is zero, "closest match" value is used automatically.
+Default) 0
+Usage) BeeNotice /m:"Hello" /fw:10
+
+fi : italic attribute option（斜体属性选项）
+Specifies an italic font if set to 1. 
+Value) 0 or 1
+Default) 0
+Usage) BeeNotice /m:"Hello" /fi:1
+
+fu : underline attribute option（下划线）
+Specifies an underlined font if set to 1. 
+Value) 0 or 1
+Default) 0
+Usage) BeeNotice /m:"Hello" /fu:1
+
+fs : strikeout attribute option（删除线）
+Specifies a strikeout font if set to 1.
+Value) 0 or 1
+Default) 0
+Usage) BeeNotice /m:"Hello" /fs:1
+
+ftc : font text color (RGB)
+Default) "255 0 0"
+Usage) BeeNotice /m:"Hello" /ftc:"0 0 255"
+
+fbc : font background color (RGB)
+Default) "255 255 255"
+Usage) BeeNotice /m:"Hello" /fbc:"35 255 0"
+
+o : overall opacity value（整体不透明值）
+Value) TRANSPARENT 0 <= o <= 255 OPAQUE
+Default) 255
+Usage) BeeNotice /m:"Hello" /o:100
+
+a : text alignment mode（对齐方式）
+Value) 0 LEFT , 1 CENTER , 2 RIGHT
+Default) 0
+Usage) BeeNotice /m:"Hello" /a:2
+
+t : Display time in milliseconds（显示时间）
+Value) 0 <= t <= 4294967295
+Default) 3000
+Usage) BeeNotice /m:"Hello" /t:5000
+
+wc : window color (RGB)
+Default) "255 255 255"
+Usage) BeeNotice /m:"Hello" /wc:"0 177 0"
+
+bc : border color (RGB)
+Default) "255 255 255"
+Usage) BeeNotice /m:"Hello" /bc:"0 123 211"
+
+tc : transparency color (RGB)（透明色）
+Specifies the transparency color.
+All pixels painted in this color will be transparent.
+Default) "255 255 255"
+Usage) BeeNotice /m:"Hello" /tc:"0 255 0"
+

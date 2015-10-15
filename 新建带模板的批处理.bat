@@ -1,0 +1,1 @@
+reg add HKLM\SOFTWARE\Classes\.bat\ShellNew /v FileName /d "C:\bat.bat" /f

@@ -1,0 +1,70 @@
+一、利用系统自带的msg命令
+
+@echo off
+title 批处理弹窗
+msg %username% /time:10 "          大牙猫电脑维护工作室"
+exit
+需要启动TermService服务
+
+二、利用系统自带的net命令
+
+net send %computername% "大牙猫电脑维护工作室" >nul
+需要启动Messenger服务
+
+三、利用系统自带的mshta程序
+
+1、利用vbsript的msgbox函数
+
+mshta vbscript:msgbox("大牙猫电脑维护工作室",64,"batch script")(window.close)
+
+2、利用vbscript的popup方法
+
+mshta vbscript:CreateObject("Wscript.Shell").popup("大牙猫电脑维护工作室",7,"batch script",64)(window.close)
+
+3、利用javascript的alert方法
+
+mshta javascript:window.alert("大牙猫电脑维护工作室");window.close()
+
+4、利用javascript的popup方法
+
+mshta "javascript:new ActiveXObject('WScript.Shell').popup('大牙猫电脑维护工作室',7,'batch script',64);window.close();"
+
+5、利用javascript的confirm方法
+
+mshta javascript:confirm("大牙猫电脑维护工作室");window.close()
+
+
+msgbox函数范例1：
+@echo off
+echo intAnswer=Msgbox("    恭喜!" ^& vbNewLine ^& "" ^& vbNewLine ^& " 安装完毕。", ok, "提示:")>"%TEMP%\inform.vbs"
+attrib +H "%TEMP%\inform.vbs"
+"%TEMP%\inform.vbs"
+del /a /f "%TEMP%\inform.vbs"
+
+msgbox函数范例2：
+@echo off
+title 弹出窗口选择提示信息
+color 0a
+>%tmp%\tmp.vbs echo MyVar=MsgBox ("直接浏览点是,手动输入点否,退出点取消", 4163, "这里是标题"):Wscript.Echo MyVar
+for /f "delims=*" %%i in ('cscript.exe //nologo %tmp%\tmp.vbs') do set MyVar=%%i
+pushd %tmp%&del/q "%a%?" tmp.vbs 2>nul
+if "%MyVar%"=="2" goto:end
+if "%MyVar%"=="6" goto:yes
+if "%MyVar%"=="7" goto:no
+goto :eof
+:yes
+echo 您选择了是
+title 您选择了是
+pause>nul
+exit
+:no
+echo 您选择了否
+title 您选择了否
+pause>nul
+exit
+:end
+echo 您选择了取消或关闭
+title 您选择了取消或关闭
+pause>nul
+exit
+
