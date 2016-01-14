@@ -22,6 +22,7 @@ echo              辽宁—浪底飞沙
 echo            ≥--------------≤
 echo              非常批处理⑥群
 echo.
+
 :cycle
 for /l %%j in (10 1 39) do (
 set /a num=%random%%%16
