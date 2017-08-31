@@ -1,0 +1,8 @@
+sel disk 0
+sel par 3
+shrink desired=4096
+create part pri
+sel par 6
+format FS=NTFS QUICK COMPRESS
+assign letter=d
+exit

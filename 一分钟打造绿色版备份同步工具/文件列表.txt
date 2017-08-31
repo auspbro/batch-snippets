@@ -1,0 +1,4 @@
+wget.exe——FTP下载命令工具
+unrar.exe——Win RAR自带的压缩命令工具
+rar.exe——Win RAR自带的解压命令工具
+ncftpput.exe——FTP上传命令工具
