@@ -1,0 +1,11 @@
+sel disk 0
+clean
+create part pri size=10000
+create part pri
+sel part 1
+format FS=NTFS QUICK COMPRESS
+assign
+sel part 2
+format FS=NTFS QUICK COMPRESS
+assign
+exit
