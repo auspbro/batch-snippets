@@ -1,2 +1,0 @@
-@ECHO OFF
-MD E:\ÐÂ\Èí¼þ\"%date%
